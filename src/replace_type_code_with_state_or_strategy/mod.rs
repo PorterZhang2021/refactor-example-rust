@@ -4,4 +4,3 @@ mod replace_type_code_with_state_or_strategy_after_2;
 mod replace_type_code_with_state_or_strategy_after_3;
 mod replace_type_code_with_state_or_strategy_after_4;
 mod replace_type_code_with_state_or_strategy_after_5;
-mod replace_type_code_with_state_or_strategy_after_6;

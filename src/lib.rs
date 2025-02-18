@@ -1,4 +1,3 @@
-mod replace_type_code_before;
-mod replace_type_code_after;
-mod replace_conditional_with_polymorphism_before;
+
 mod replace_type_code_with_state_or_strategy;
+mod replace_conditional_with_polymorphism;

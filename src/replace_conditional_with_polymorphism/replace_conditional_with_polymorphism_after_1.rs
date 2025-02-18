@@ -6,8 +6,7 @@ struct Employee {
 }
 
 impl Employee {
-
-    fn new( monthly_salary: u32, commission: u32, bonus: u32) -> Employee {
+    fn new(monthly_salary: u32, commission: u32, bonus: u32) -> Employee {
         Employee { employee_type: None, monthly_salary, commission, bonus }
     }
 
@@ -19,32 +18,54 @@ impl Employee {
     }
 
     fn set_employee_type(&mut self, arg: u8) {
-        self.employee_type = Option::from(EmployeeTypeAction::new(arg));
+        self.employee_type = Option::from(EmployeeType::new(arg));
     }
 
     fn pay_amount(&self) -> u32 {
-        match self.get_employee_type() {
-            EmployeeTypeAction::ENGINEER => self.monthly_salary ,
-            EmployeeTypeAction::MANAGER => self.monthly_salary + self.commission,
-            EmployeeTypeAction::DIRECTOR => self.monthly_salary + self.bonus,
-            _ => panic!("Invalid employee type"),
+        match self.employee_type {
+            Some(ref e) => e.pay_amount(self),
+            None => panic!("Employee type not set"),
         }
+    }
+
+    fn get_monthly_salary(&self) -> u32 {
+        self.monthly_salary
+    }
+    fn get_commission(&self) -> u32 {
+        self.commission
+    }
+    fn get_bonus(&self) -> u32 {
+        self.bonus
     }
 }
 
-trait EmployeeTypeAction {
+struct EmployeeType;
 
+impl EmployeeType {
     const ENGINEER: u8 = 1;
     const MANAGER: u8 = 2;
     const DIRECTOR: u8 = 3;
 
-    fn get_employee_type(&self) -> u8;
-
     fn new(arg: u8) -> Box<dyn EmployeeTypeAction> {
         match arg {
-            EmployeeTypeAction::ENGINEER =>  Box::new(Engineer),
-            EmployeeTypeAction::MANAGER =>  Box::new(Manager),
-            EmployeeTypeAction::DIRECTOR =>  Box::new(Director),
+            EmployeeType::ENGINEER => Box::new(Engineer),
+            EmployeeType::MANAGER => Box::new(Manager),
+            EmployeeType::DIRECTOR => Box::new(Director),
+            _ => panic!("Invalid employee type"),
+        }
+    }
+
+
+}
+
+trait EmployeeTypeAction {
+    fn get_employee_type(&self) -> u8;
+
+    fn pay_amount(&self, employee: &Employee) -> u32 {
+        match self.get_employee_type() {
+            EmployeeType::ENGINEER => employee.get_monthly_salary(),
+            EmployeeType::MANAGER => employee.get_monthly_salary() + employee.get_commission(),
+            EmployeeType::DIRECTOR => employee.get_monthly_salary() + employee.get_bonus(),
             _ => panic!("Invalid employee type"),
         }
     }
@@ -54,21 +75,21 @@ struct Engineer;
 
 impl EmployeeTypeAction for Engineer {
     fn get_employee_type(&self) -> u8 {
-        EmployeeTypeAction::ENGINEER
+        EmployeeType::ENGINEER
     }
 }
 
 struct Manager;
 impl EmployeeTypeAction for Manager {
     fn get_employee_type(&self) -> u8 {
-        EmployeeTypeAction::MANAGER
+        EmployeeType::MANAGER
     }
 }
 
 struct Director;
 impl EmployeeTypeAction for Director {
     fn get_employee_type(&self) -> u8 {
-        EmployeeTypeAction::DIRECTOR
+        EmployeeType::DIRECTOR
     }
 }
 
@@ -79,16 +100,15 @@ mod tests {
     #[test]
     fn test_pay_amount() {
         let mut engineer = Employee::new(1000, 0, 0);
-        engineer.set_employee_type(EmployeeTypeAction::ENGINEER);
+        engineer.set_employee_type(EmployeeType::ENGINEER);
         assert_eq!(engineer.pay_amount(), 1000);
 
         let mut manager = Employee::new(2000, 100, 0);
-        manager.set_employee_type(EmployeeTypeAction::MANAGER);
+        manager.set_employee_type(EmployeeType::MANAGER);
         assert_eq!(manager.pay_amount(), 2100);
 
         let mut director = Employee::new(2000, 0, 1000);
-        director.set_employee_type(EmployeeTypeAction::DIRECTOR);
+        director.set_employee_type(EmployeeType::DIRECTOR);
         assert_eq!(director.pay_amount(), 3000);
-
     }
 }
