@@ -1,3 +1,6 @@
 
-mod replace_type_code_with_state_or_strategy;
-mod replace_conditional_with_polymorphism;
+mod refactor_8_15_replace_type_code_with_state_or_strategy;
+mod refactor_9_6_replace_conditional_with_polymorphism;
+mod refactor_8_1_self_encapsulate_field;
+mod refactor_8_2_replace_data_value_with_object;
+mod refactor_8_3_change_value_to_reference;

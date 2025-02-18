@@ -1,0 +1,5 @@
+mod self_encapsulate_field_before;
+mod self_encapsulate_field_after_1;
+mod self_encapsulate_field_after_2;
+mod self_encapsulate_field_after_3;
+mod self_encapsulate_field_after_4;
